@@ -1,26 +1,10 @@
 import os
 import json
 from pymongo import MongoClient
+from db_store_from_local_config import *
 
-MONGO_URI = 'mongodb://localhost:27017/'
-
-# def insert_json_to_mongodb(json_file, collection_name, db_name):
-#     client = MongoClient(MONGO_URI)
-#     db = client[db_name]
-#     collection = db[collection_name]
-
-#     try:
-#         with open(json_file, 'r') as f:
-#             #json_content = json_content.replace("'", '"')
-#             data = json.load(f)
-#             if not data:  # Check if JSON data is empty
-#                 data = []  # or data = {} if you want an empty dictionary
-#             print("#############",data)
-#             collection.insert_many(data)
-#     except Exception as e:
-#         print(f"Error inserting JSON file {json_file}: {e}")
-
-#     client.close()
+#MONGO_URI = 'mongodb://localhost:27017/'
+MONGO_URI=f"mongodb://{MongoConfigRemoteToLocal.get('hostname')}:{MongoConfigRemoteToLocal.get('port')}/"
 def insert_json_to_mongodb(json_file, collection_name, db_name):
     client = MongoClient(MONGO_URI)
     db = client[db_name]
@@ -61,6 +45,7 @@ def main(directory, db_name):
 
     client.close()
 
-directory_path = r"D:\File_Backup\data\abg-finops_backup_20240417_164815"
-db_name = 'New_Data'
+#directory_path = r"D:\File_Backup\data\abg-finops_backup_20240417_164815"
+directory_path = MongoConfigRemoteToLocal.directory_path.value
+db_name = MongoConfigRemoteToLocal.mongo_db_name.value
 main(directory=directory_path, db_name=db_name)
